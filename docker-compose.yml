@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: chat-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - chat-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: chat-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - MONGO_DB_URI=mongodb://mongodb:27017/chat-app
+      - JWT_SECRET=57ab573ae4706015c88e543d559411ef07066aeb967e0451b29fc976e74197d7
+      - CORS_ORIGIN=http://localhost:5173
+      - PORT=3000
+      - DOMAIN=localhost
+    depends_on:
+      - mongodb
+    networks:
+      - chat-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: chat-frontend
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_URL=http://backend:3000
+    depends_on:
+      - backend
+    networks:
+      - chat-network
+
+networks:
+  chat-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
