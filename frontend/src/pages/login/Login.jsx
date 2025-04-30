@@ -31,6 +31,7 @@ const Login = () => {
 							placeholder='Enter username'
 							className='w-full input input-bordered h-10'
 							value={username}
+							defaultValue={"Om Keshri"}
 							onChange={(e) => setUsername(e.target.value)}
 						/>
 					</div>
