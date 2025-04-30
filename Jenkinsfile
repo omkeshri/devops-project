@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/omkeshri/devops-project.git'
+                checkout scm
             }
         }
 
